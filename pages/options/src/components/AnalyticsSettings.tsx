@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { analyticsSettingsStore } from '@extension/storage';
-
 import type { AnalyticsSettingsConfig } from '@extension/storage';
 
 interface AnalyticsSettingsProps {
@@ -48,9 +47,7 @@ export const AnalyticsSettings: React.FC<AnalyticsSettingsProps> = ({ isDarkMode
       <section className="space-y-6">
         <div
           className={`rounded-lg border ${isDarkMode ? 'border-slate-700 bg-slate-800' : 'border-blue-100 bg-gray-50'} p-6 text-left shadow-sm`}>
-          <h2 className={`mb-4 text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-            Analytics Settings
-          </h2>
+          <h2 className={`mb-4 text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>分析与统计</h2>
           <div className="animate-pulse">
             <div className={`mb-2 h-4 w-3/4 rounded ${isDarkMode ? 'bg-slate-600' : 'bg-gray-200'}`}></div>
             <div className={`h-4 w-1/2 rounded ${isDarkMode ? 'bg-slate-600' : 'bg-gray-200'}`}></div>
@@ -65,9 +62,7 @@ export const AnalyticsSettings: React.FC<AnalyticsSettingsProps> = ({ isDarkMode
       <section className="space-y-6">
         <div
           className={`rounded-lg border ${isDarkMode ? 'border-slate-700 bg-slate-800' : 'border-blue-100 bg-gray-50'} p-6 text-left shadow-sm`}>
-          <h2 className={`mb-4 text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-            Analytics Settings
-          </h2>
+          <h2 className={`mb-4 text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>分析与统计</h2>
           <p className={`${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>Failed to load analytics settings.</p>
         </div>
       </section>
@@ -78,9 +73,7 @@ export const AnalyticsSettings: React.FC<AnalyticsSettingsProps> = ({ isDarkMode
     <section className="space-y-6">
       <div
         className={`rounded-lg border ${isDarkMode ? 'border-slate-700 bg-slate-800' : 'border-blue-100 bg-gray-50'} p-6 text-left shadow-sm`}>
-        <h2 className={`mb-4 text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-          Analytics Settings
-        </h2>
+        <h2 className={`mb-4 text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>分析与统计</h2>
 
         <div className="space-y-6">
           {/* Main toggle */}
@@ -90,7 +83,7 @@ export const AnalyticsSettings: React.FC<AnalyticsSettingsProps> = ({ isDarkMode
               <label
                 htmlFor="analytics-enabled"
                 className={`text-base font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                Help improve Nanobrowser
+                帮助改进
               </label>
               <div className="relative inline-block w-12 select-none">
                 <input

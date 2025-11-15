@@ -1,36 +1,38 @@
+import { t } from '@extension/i18n';
+
 export const ACTOR_PROFILES = {
   user: {
-    name: 'User',
+    name: t('actor_user'),
     icon: 'icons/user.svg',
     iconBackground: '#4CAF50',
   },
   system: {
-    name: 'System',
+    name: t('actor_system'),
     icon: 'icons/system.svg',
     iconBackground: '#2196F3',
   },
   planner: {
-    name: 'Planner',
+    name: t('actor_planner'),
     icon: 'icons/planner.svg',
     iconBackground: '#FF9800',
   },
   navigator: {
-    name: 'Navigator',
+    name: t('actor_navigator'),
     icon: 'icons/navigator.svg',
     iconBackground: '#40A9FF',
   },
   validator: {
-    name: 'Validator',
+    name: t('actor_validator'),
     icon: 'icons/validator.svg',
     iconBackground: '#EC407A',
   },
   manager: {
-    name: 'Manager',
+    name: t('actor_manager'),
     icon: 'icons/manager.svg',
     iconBackground: '#9C27B0',
   },
   evaluator: {
-    name: 'Evaluator',
+    name: t('actor_evaluator'),
     icon: 'icons/evaluator.svg',
     iconBackground: '#795548',
   },

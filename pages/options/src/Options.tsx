@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import '@src/Options.css';
 import { Button } from '@extension/ui';
 import { withErrorBoundary, withSuspense } from '@extension/shared';
-import { t } from '@extension/i18n';
+// 移除i18n导入，因为我们不再使用它
 import { FiSettings, FiCpu, FiShield, FiTrendingUp, FiHelpCircle } from 'react-icons/fi';
 import { GeneralSettings } from './components/GeneralSettings';
 import { ModelSettings } from './components/ModelSettings';
@@ -12,18 +12,18 @@ import { AnalyticsSettings } from './components/AnalyticsSettings';
 type TabTypes = 'general' | 'models' | 'firewall' | 'analytics' | 'help';
 
 const TABS: { id: TabTypes; icon: React.ComponentType<{ className?: string }>; label: string }[] = [
-  { id: 'general', icon: FiSettings, label: t('options_tabs_general') },
-  { id: 'models', icon: FiCpu, label: t('options_tabs_models') },
-  { id: 'firewall', icon: FiShield, label: t('options_tabs_firewall') },
-  { id: 'analytics', icon: FiTrendingUp, label: 'Analytics' },
-  { id: 'help', icon: FiHelpCircle, label: t('options_tabs_help') },
+  { id: 'general', icon: FiSettings, label: '通用' },
+  { id: 'models', icon: FiCpu, label: '模型' },
+  { id: 'firewall', icon: FiShield, label: '防火墙' },
+  { id: 'analytics', icon: FiTrendingUp, label: '分析' },
+  { id: 'help', icon: FiHelpCircle, label: '帮助' },
 ];
 
 const Options = () => {
   const [activeTab, setActiveTab] = useState<TabTypes>('models');
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Check for dark mode preference
+  // 检查暗色模式偏好
   useEffect(() => {
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     setIsDarkMode(darkModeMediaQuery.matches);
@@ -62,13 +62,11 @@ const Options = () => {
   return (
     <div
       className={`flex min-h-screen min-w-[768px] ${isDarkMode ? 'bg-slate-900' : "bg-[url('/bg.jpg')] bg-cover bg-center"} ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`}>
-      {/* Vertical Navigation Bar */}
+      {/* 垂直导航栏 */}
       <nav
         className={`w-48 border-r ${isDarkMode ? 'border-slate-700 bg-slate-800/80' : 'border-white/20 bg-[#0EA5E9]/10'} backdrop-blur-sm`}>
         <div className="p-4">
-          <h1 className={`mb-6 text-xl font-bold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-            {t('options_nav_header')}
-          </h1>
+          <h1 className={`mb-6 text-xl font-bold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>选项</h1>
           <ul className="space-y-2">
             {TABS.map(item => (
               <li key={item.id}>
@@ -89,7 +87,7 @@ const Options = () => {
         </div>
       </nav>
 
-      {/* Main Content Area */}
+      {/* 主内容区域 */}
       <main className={`flex-1 ${isDarkMode ? 'bg-slate-800/50' : 'bg-white/10'} p-8 backdrop-blur-sm`}>
         <div className="mx-auto min-w-[512px] max-w-screen-lg">{renderTabContent()}</div>
       </main>
@@ -97,4 +95,4 @@ const Options = () => {
   );
 };
 
-export default withErrorBoundary(withSuspense(Options, <div>Loading...</div>), <div>Error Occurred</div>);
+export default withErrorBoundary(withSuspense(Options, <div>加载中...</div>), <div>发生错误</div>);

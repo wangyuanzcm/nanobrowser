@@ -1,0 +1,145 @@
+{
+  "app_metadata_description": {
+    "description": "Extension description",
+    "message": "使用 AI 自动化网页任务！Nanobrowser 是一款开源的 Chrome 扩展，能协助您提取数据、填写表单等。"
+  },
+  "app_metadata_name": {
+    "description": "Extension name",
+    "message": "Nanobrowser：AI 网页代理与自动化"
+  },
+  "errors_unknown": {
+    "message": "发生未知错误"
+  },
+  "errors_conn_serviceWorker": {
+    "message": "连接至 Service Worker 失败"
+  },
+  "errors_cmd_unknown": {
+    "message": "不支持的指令：$COMMAND$。\n\n可用指令：/state、/nohighlight、/replay <historySessionId>",
+    "placeholders": {
+      "command": {
+        "content": "$1",
+        "example": "/unknown"
+      }
+    }
+  },
+  "nav_newChat_a11y": {
+    "message": "新对话"
+  },
+  "nav_loadHistory_a11y": {
+    "message": "加载历史"
+  },
+  "nav_settings_a11y": {
+    "message": "设置"
+  },
+  "nav_back": {
+    "message": "← 返回"
+  },
+  "nav_back_a11y": {
+    "message": "回到对话"
+  },
+  "welcome_title": {
+    "message": "欢迎使用 Nanobrowser！"
+  },
+  "welcome_instruction": {
+    "message": "开始使用前，请先完成 API 密钥的设置。"
+  },
+  "welcome_openSettings": {
+    "message": "打开设置"
+  },
+  "welcome_quickStart": {
+    "message": "快速入门指南"
+  },
+  "options_tabs_analytics": {
+    "message": "分析"
+  },
+  "options_analytics_header": {
+    "message": "分析设置"
+  },
+  "options_analytics_helpImprove": {
+    "message": "帮助改进 Nanobrowser"
+  },
+  "welcome_joinCommunity": {
+    "message": "加入我们的社区"
+  },
+  "status_checkingConfig": {
+    "message": "正在检查设置..."
+  },
+  "chat_buttons_stop": {
+    "message": "停止"
+  },
+  "chat_buttons_replay": {
+    "message": "重播"
+  },
+  "chat_buttons_send": {
+    "message": "发送"
+  },
+  "chat_input_placeholder": {
+    "message": "有什么需要协助的吗？"
+  },
+  "chat_input_form": {
+    "message": "对话输入表单"
+  },
+  "chat_input_editor": {
+    "message": "消息输入"
+  },
+  "chat_history_title": {
+    "message": "对话历史"
+  },
+  "chat_history_empty": {
+    "message": "没有可用的对话历史"
+  },
+  "chat_history_bookmark": {
+    "message": "将工作区加入书签"
+  },
+  "chat_history_delete": {
+    "message": "删除工作区"
+  },
+  "chat_bookmarks_header": {
+    "message": "快速入门"
+  },
+  "chat_bookmarks_saveEdit": {
+    "message": "保存更改"
+  },
+  "chat_bookmarks_cancelEdit": {
+    "message": "取消更改"
+  },
+  "chat_bookmarks_edit": {
+    "message": "编辑书签标题"
+  },
+  "chat_bookmarks_delete": {
+    "message": "删除书签"
+  },
+  "progress_message": {
+    "message": "正在显示进度..."
+  },
+  "actor_user": {
+    "message": "用户"
+  },
+  "actor_system": {
+    "message": "系统"
+  },
+  "actor_planner": {
+    "message": "规划师"
+  },
+  "actor_navigator": {
+    "message": "导航器"
+  },
+  "actor_validator": {
+    "message": "验证器"
+  },
+  "actor_manager": {
+    "message": "管理器"
+  },
+  "actor_evaluator": {
+    "message": "评估器"
+  },
+  "favorite_prompt_explore_ai_papers": {
+    "message": "📚 探索AI论文"
+  },
+  "favorite_prompt_follow_on_twitter": {
+    "message": "🐦 在X/Twitter上关注我们！"
+  },
+  "favorite_prompt_star_on_github": {
+    "message": "🌟 在GitHub上给我们点星！"
+  }
+}

@@ -21,7 +21,7 @@ import {
   getDefaultAgentModelParams,
   type ProviderConfig,
 } from '@extension/storage';
-import { t } from '@extension/i18n';
+// 直接使用中文文本，不再需要i18n导入
 
 // Helper function to check if a model is an OpenAI reasoning model (O-series or GPT-5 models)
 function isOpenAIReasoningModel(modelName: string): boolean {
@@ -385,7 +385,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
       return {
         theme: isDarkMode ? 'dark' : 'light',
         variant: 'danger' as const,
-        children: t('options_models_providers_btnDelete'),
+        children: '删除',
         disabled: false,
       };
     }
@@ -420,7 +420,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
     return {
       theme: isDarkMode ? 'dark' : 'light',
       variant: 'primary' as const,
-      children: t('options_models_providers_btnSave'),
+      children: '保存',
       disabled: !hasInput || !isModified,
     };
   };
@@ -431,7 +431,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
       if (providers[provider].type === ProviderTypeEnum.CustomOpenAI && providers[provider].name?.includes(' ')) {
         setNameErrors(prev => ({
           ...prev,
-          [provider]: t('options_models_providers_errors_spacesNotAllowed'),
+          [provider]: '不允许包含空格',
         }));
         return;
       }
@@ -446,7 +446,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
           providers[provider].type === ProviderTypeEnum.Llama) &&
         (!providers[provider].baseUrl || !providers[provider].baseUrl.trim())
       ) {
-        alert(t('options_models_providers_errors_baseUrlRequired', getDefaultDisplayNameFromProviderId(provider)));
+        alert('基础URL是必需的');
         return;
       }
 
@@ -726,7 +726,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
           <label
             htmlFor={`${agentName}-model`}
             className={`w-24 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            {t('options_models_labels_model')}
+            模型
           </label>
           <select
             id={`${agentName}-model`}
@@ -735,7 +735,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
             value={selectedModels[agentName] || ''} // Use the stored provider>model value directly
             onChange={e => handleModelChange(agentName, e.target.value)}>
             <option key="default" value="">
-              {t('options_models_chooseModel')}
+              选择模型
             </option>
             {availableModels.map(({ provider, providerName, model }) => (
               <option key={`${provider}>${model}`} value={`${provider}>${model}`}>
@@ -751,7 +751,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
             <label
               htmlFor={`${agentName}-temperature`}
               className={`w-24 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              {t('options_models_labels_temperature')}
+              温度
             </label>
             <div className="flex flex-1 items-center space-x-2">
               <input
@@ -799,7 +799,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
               <label
                 htmlFor={`${agentName}-topP`}
                 className={`w-24 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t('options_models_labels_topP')}
+                Top P
               </label>
               <div className="flex flex-1 items-center space-x-2">
                 <input
@@ -845,7 +845,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
             <label
               htmlFor={`${agentName}-reasoning-effort`}
               className={`w-24 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              {t('options_models_labels_reasoning')}
+              推理
             </label>
             <div className="flex flex-1 items-center space-x-2">
               <select
@@ -870,9 +870,9 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
   const getAgentDescription = (agentName: AgentNameEnum) => {
     switch (agentName) {
       case AgentNameEnum.Navigator:
-        return t('options_models_agents_navigator');
+        return '导航器';
       case AgentNameEnum.Planner:
-        return t('options_models_agents_planner');
+        return '规划器';
       default:
         return '';
     }
@@ -1130,12 +1130,12 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
       <div
         className={`rounded-lg border ${isDarkMode ? 'border-slate-700 bg-slate-800' : 'border-blue-100 bg-gray-50'} p-6 text-left shadow-sm`}>
         <h2 className={`mb-4 text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-          {t('options_models_providers_header')}
+          语言模型提供商
         </h2>
         <div className="space-y-6">
           {getSortedProviders().length === 0 ? (
             <div className="py-8 text-center text-gray-500">
-              <p className="mb-4">{t('options_models_providers_notConfigured')}</p>
+              <p className="mb-4">尚未配置语言模型提供商</p>
             </div>
           ) : (
             getSortedProviders().map(([providerId, providerConfig]) => {
@@ -1158,7 +1158,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                       {/* Show Cancel button for newly added providers */}
                       {modifiedProviders.has(providerId) && !providersFromStorage.has(providerId) && (
                         <Button variant="secondary" onClick={() => handleCancelProvider(providerId)}>
-                          {t('options_models_providers_btnCancel')}
+                          取消
                         </Button>
                       )}
                       <Button
@@ -1177,7 +1177,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                   {/* Show message for newly added providers */}
                   {modifiedProviders.has(providerId) && !providersFromStorage.has(providerId) && (
                     <div className={`mb-2 text-sm ${isDarkMode ? 'text-teal-300' : 'text-teal-700'}`}>
-                      <p>{t('options_models_providers_setupInstructions')}</p>
+                      <p>设置说明</p>
                     </div>
                   )}
 
@@ -1189,12 +1189,12 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                           <label
                             htmlFor={`${providerId}-name`}
                             className={`w-20 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                            {t('options_models_providers_custom_name')}
+                            名称
                           </label>
                           <input
                             id={`${providerId}-name`}
                             type="text"
-                            placeholder={t('options_models_providers_custom_name_placeholder')}
+                            placeholder="输入提供商名称"
                             value={providerConfig.name || ''}
                             onChange={e => {
                               console.log('Name input changed:', e.target.value);
@@ -1217,7 +1217,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                           </p>
                         ) : (
                           <p className={`ml-20 mt-1 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                            {t('options_models_providers_custom_name_desc')}
+                            自定义提供商名称
                           </p>
                         )}
                       </div>
@@ -1228,7 +1228,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                       <label
                         htmlFor={`${providerId}-api-key`}
                         className={`w-20 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                        {t('options_models_providers_apiKey')}
+                        API密钥
                         {/* Show asterisk only if required */}
                         {providerConfig.type !== ProviderTypeEnum.CustomOpenAI &&
                         providerConfig.type !== ProviderTypeEnum.Ollama
@@ -1241,10 +1241,10 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                           type="password"
                           placeholder={
                             providerConfig.type === ProviderTypeEnum.CustomOpenAI
-                              ? t('options_models_providers_apiKey_placeholder_optional')
+                              ? '可选'
                               : providerConfig.type === ProviderTypeEnum.Ollama
-                                ? t('options_models_providers_apiKey_placeholder_ollama')
-                                : t('options_models_providers_apiKey_placeholder_required')
+                                ? 'Ollama不需要API密钥'
+                                : '必填'
                           }
                           value={providerConfig.apiKey || ''}
                           onChange={e => handleApiKeyChange(providerId, e.target.value, providerConfig.baseUrl)}
@@ -1258,11 +1258,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                               isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-500 hover:text-gray-700'
                             }`}
                             onClick={() => toggleApiKeyVisibility(providerId)}
-                            aria-label={
-                              visibleApiKeys[providerId]
-                                ? t('options_models_providers_apiKey_hide')
-                                : t('options_models_providers_apiKey_show')
-                            }>
+                            aria-label={visibleApiKeys[providerId] ? '隐藏' : '显示'}>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 24 24"
@@ -1273,11 +1269,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                               strokeLinejoin="round"
                               className="size-5"
                               aria-hidden="true">
-                              <title>
-                                {visibleApiKeys[providerId]
-                                  ? t('options_models_providers_apiKey_hide')
-                                  : t('options_models_providers_apiKey_show')}
-                              </title>
+                              <title>{visibleApiKeys[providerId] ? '隐藏' : '显示'}</title>
                               {visibleApiKeys[providerId] ? (
                                 <>
                                   <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
@@ -1321,9 +1313,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                             htmlFor={`${providerId}-base-url`}
                             className={`w-20 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                             {/* Adjust Label based on provider */}
-                            {providerConfig.type === ProviderTypeEnum.AzureOpenAI
-                              ? t('options_models_providers_endpoint')
-                              : t('options_models_providers_baseUrl')}
+                            {providerConfig.type === ProviderTypeEnum.AzureOpenAI ? '终结点' : '基础URL'}
                             {/* Show asterisk only if required */}
                             {/* OpenRouter has a default, so not strictly required, but needed for save button */}
                             {providerConfig.type === ProviderTypeEnum.CustomOpenAI ||
@@ -1336,14 +1326,14 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                             type="text"
                             placeholder={
                               providerConfig.type === ProviderTypeEnum.CustomOpenAI
-                                ? t('options_models_providers_placeholders_baseUrl_custom')
+                                ? 'https://api.example.com'
                                 : providerConfig.type === ProviderTypeEnum.AzureOpenAI
-                                  ? t('options_models_providers_placeholders_baseUrl_azure')
+                                  ? 'https://your-resource.openai.azure.com'
                                   : providerConfig.type === ProviderTypeEnum.OpenRouter
-                                    ? t('options_models_providers_placeholders_baseUrl_openrouter')
+                                    ? 'https://openrouter.ai/api/v1'
                                     : providerConfig.type === ProviderTypeEnum.Llama
-                                      ? t('options_models_providers_placeholders_baseUrl_llama')
-                                      : t('options_models_providers_placeholders_baseUrl_ollama')
+                                      ? 'https://api.llama-api.com'
+                                      : 'http://localhost:11434'
                             }
                             value={providerConfig.baseUrl || ''}
                             onChange={e => handleApiKeyChange(providerId, providerConfig.apiKey || '', e.target.value)}
@@ -1359,7 +1349,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                         <label
                           htmlFor={`${providerId}-azure-deployment`}
                           className={`w-20 pt-2 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                          {t('options_models_providers_deployment')}*
+                          部署名称*
                         </label>
                         <div className="flex-1 space-y-2">
                           <div
@@ -1384,7 +1374,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                             <input
                               id={`${providerId}-azure-deployment-input`}
                               type="text"
-                              placeholder={t('options_models_providers_placeholders_azureDeployment')}
+                              placeholder="输入部署名称并按Enter"
                               value={newModelInputs[providerId] || ''}
                               onChange={e => handleModelsChange(providerId, e.target.value)}
                               onKeyDown={e => {
@@ -1405,7 +1395,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                             />
                           </div>
                           <p className={`mt-1 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                            {t('options_models_providers_deployment_desc')}
+                            输入您的Azure OpenAI部署名称并按Enter键添加
                           </p>
                         </div>
                       </div>
@@ -1417,12 +1407,12 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                         <label
                           htmlFor={`${providerId}-azure-version`}
                           className={`w-20 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                          {t('options_models_providers_apiVersion')}*
+                          API版本*
                         </label>
                         <input
                           id={`${providerId}-azure-version`}
                           type="text"
-                          placeholder={t('options_models_providers_placeholders_azureApiVersion')}
+                          placeholder="2024-05-01-preview"
                           value={providerConfig.azureApiVersion || ''}
                           onChange={e => handleAzureApiVersionChange(providerId, e.target.value)}
                           className={`flex-1 rounded-md border text-sm ${isDarkMode ? 'border-slate-600 bg-slate-700 text-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-800' : 'border-gray-300 bg-white text-gray-700 focus:border-blue-400 focus:ring-2 focus:ring-blue-200'} p-2 outline-none`}
@@ -1436,7 +1426,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                         <label
                           htmlFor={`${providerId}-models-label`}
                           className={`w-20 pt-2 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                          {t('options_models_providers_models')}
+                          模型
                         </label>
                         <div className="flex-1 space-y-2">
                           {/* Conditional UI for OpenRouter */}
@@ -1461,7 +1451,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                                   ))
                                 ) : (
                                   <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                    {t('options_models_providers_models_openrouter_empty')}
+                                    未添加任何模型
                                   </span>
                                 )}
                                 <input
@@ -1475,7 +1465,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                                 />
                               </div>
                               <p className={`mt-1 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                {t('options_models_providers_models_instructions')}
+                                输入模型名称并按Enter键添加
                               </p>
                             </>
                           ) : (
@@ -1514,7 +1504,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                                 />
                               </div>
                               <p className={`mt-1 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                {t('options_models_providers_models_instructions')}
+                                输入模型名称并按Enter键添加
                               </p>
                             </>
                           )}
@@ -1535,13 +1525,13 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                               OLLAMA_ORIGINS=chrome-extension://*
                             </code>{' '}
                           </strong>
-                          {t('options_models_providers_ollama_reminder')}
+                          请在Ollama环境变量中添加以上配置以允许扩展访问
                           <a
                             href="https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-allow-additional-web-origins-to-access-ollama"
                             target="_blank"
                             rel="noopener noreferrer"
                             className={`ml-1 ${isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}>
-                            {t('options_models_providers_ollama_learnMore')}
+                            了解更多
                           </a>
                         </p>
                       </div>
@@ -1567,8 +1557,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                   ? 'border-blue-700 bg-blue-600 text-white hover:bg-blue-500'
                   : 'border-blue-200 bg-blue-100 text-blue-800 hover:bg-blue-200'
               }`}>
-              <span className="mr-2 text-sm">+</span>{' '}
-              <span className="text-sm">{t('options_models_addNewProvider')}</span>
+              <span className="mr-2 text-sm">+</span> <span className="text-sm">添加新提供商</span>
             </Button>
 
             {isProviderSelectorOpen && (
@@ -1612,7 +1601,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
                         : 'text-blue-700 hover:bg-blue-100 hover:text-blue-800'
                     } transition-colors duration-150`}
                     onClick={() => handleProviderSelection(ProviderTypeEnum.CustomOpenAI)}>
-                    <span className="font-medium">{t('options_models_providers_openaiCompatible')}</span>
+                    <span className="font-medium">OpenAI兼容</span>
                   </button>
                 </div>
               </div>
@@ -1625,7 +1614,7 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
       <div
         className={`rounded-lg border ${isDarkMode ? 'border-slate-700 bg-slate-800' : 'border-blue-100 bg-gray-50'} p-6 text-left shadow-sm`}>
         <h2 className={`mb-4 text-left text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-          {t('options_models_selection_header')}
+          选择模型
         </h2>
         <div className="space-y-4">
           {[AgentNameEnum.Planner, AgentNameEnum.Navigator].map(agentName => (
@@ -1638,10 +1627,10 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
       <div
         className={`rounded-lg border ${isDarkMode ? 'border-slate-700 bg-slate-800' : 'border-blue-100 bg-gray-50'} p-6 text-left shadow-sm`}>
         <h2 className={`mb-4 text-left text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-          {t('options_models_speechToText_header')}
+          语音转文本
         </h2>
         <p className={`mb-4 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-          {t('options_models_stt_desc')}
+          选择用于语音识别的模型，支持实时将语音转换为文本
         </p>
 
         <div
@@ -1650,14 +1639,14 @@ export const ModelSettings = ({ isDarkMode = false }: ModelSettingsProps) => {
             <label
               htmlFor="speech-to-text-model"
               className={`w-24 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              {t('options_models_labels_model')}
+              模型
             </label>
             <select
               id="speech-to-text-model"
               className={`flex-1 rounded-md border text-sm ${isDarkMode ? 'border-slate-600 bg-slate-700 text-gray-200' : 'border-gray-300 bg-white text-gray-700'} px-3 py-2`}
               value={selectedSpeechToTextModel}
               onChange={e => handleSpeechToTextModelChange(e.target.value)}>
-              <option value="">{t('options_models_chooseModel')}</option>
+              <option value="">选择模型</option>
               {/* Filter available models to show only Gemini models */}
               {availableModels
                 .filter(({ provider }) => {

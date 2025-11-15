@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { type GeneralSettingsConfig, generalSettingsStore, DEFAULT_GENERAL_SETTINGS } from '@extension/storage';
-import { t } from '@extension/i18n';
 
 interface GeneralSettingsProps {
   isDarkMode?: boolean;
@@ -10,19 +9,19 @@ export const GeneralSettings = ({ isDarkMode = false }: GeneralSettingsProps) =>
   const [settings, setSettings] = useState<GeneralSettingsConfig>(DEFAULT_GENERAL_SETTINGS);
 
   useEffect(() => {
-    // Load initial settings
+    // 加载初始设置
     generalSettingsStore.getSettings().then(setSettings);
   }, []);
 
   const updateSetting = async <K extends keyof GeneralSettingsConfig>(key: K, value: GeneralSettingsConfig[K]) => {
-    // Optimistically update the local state for responsiveness
+    // 乐观更新本地状态以提高响应性
     setSettings(prevSettings => ({ ...prevSettings, [key]: value }));
 
-    // Call the store to update the setting
+    // 调用store更新设置
     await generalSettingsStore.updateSettings({ [key]: value } as Partial<GeneralSettingsConfig>);
 
-    // After the store update (which might have side effects, e.g., useVision affecting displayHighlights),
-    // fetch the latest settings from the store and update the local state again to ensure UI consistency.
+    // 存储更新后（可能有副作用，例如useVision影响displayHighlights），
+    // 再次从store获取最新设置并更新本地状态，以确保UI一致性。
     const latestSettings = await generalSettingsStore.getSettings();
     setSettings(latestSettings);
   };
@@ -32,21 +31,19 @@ export const GeneralSettings = ({ isDarkMode = false }: GeneralSettingsProps) =>
       <div
         className={`rounded-lg border ${isDarkMode ? 'border-slate-700 bg-slate-800' : 'border-blue-100 bg-white'} p-6 text-left shadow-sm`}>
         <h2 className={`mb-4 text-left text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-          {t('options_general_header')}
+          通用设置
         </h2>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t('options_general_maxSteps')}
-              </h3>
+              <h3 className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>最大步骤数</h3>
               <p className={`text-sm font-normal ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                {t('options_general_maxSteps_desc')}
+                定义代理在放弃前可以执行的最大步骤数
               </p>
             </div>
             <label htmlFor="maxSteps" className="sr-only">
-              {t('options_general_maxSteps')}
+              最大步骤数
             </label>
             <input
               id="maxSteps"
@@ -62,14 +59,14 @@ export const GeneralSettings = ({ isDarkMode = false }: GeneralSettingsProps) =>
           <div className="flex items-center justify-between">
             <div>
               <h3 className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t('options_general_maxActions')}
+                每步最大操作数
               </h3>
               <p className={`text-sm font-normal ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                {t('options_general_maxActions_desc')}
+                定义代理在每一步中可以执行的最大操作数
               </p>
             </div>
             <label htmlFor="maxActionsPerStep" className="sr-only">
-              {t('options_general_maxActions')}
+              每步最大操作数
             </label>
             <input
               id="maxActionsPerStep"
@@ -85,14 +82,14 @@ export const GeneralSettings = ({ isDarkMode = false }: GeneralSettingsProps) =>
           <div className="flex items-center justify-between">
             <div>
               <h3 className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t('options_general_maxFailures')}
+                最大失败次数
               </h3>
               <p className={`text-sm font-normal ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                {t('options_general_maxFailures_desc')}
+                定义代理在放弃前可以接受的最大连续失败次数
               </p>
             </div>
             <label htmlFor="maxFailures" className="sr-only">
-              {t('options_general_maxFailures')}
+              最大失败次数
             </label>
             <input
               id="maxFailures"
@@ -108,10 +105,10 @@ export const GeneralSettings = ({ isDarkMode = false }: GeneralSettingsProps) =>
           <div className="flex items-center justify-between">
             <div>
               <h3 className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t('options_general_enableVision')}
+                启用视觉功能
               </h3>
               <p className={`text-sm font-normal ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                {t('options_general_enableVision_desc')}
+                允许代理查看和分析屏幕内容
               </p>
             </div>
             <div className="relative inline-flex cursor-pointer items-center">
@@ -125,18 +122,16 @@ export const GeneralSettings = ({ isDarkMode = false }: GeneralSettingsProps) =>
               <label
                 htmlFor="useVision"
                 className={`peer h-6 w-11 rounded-full ${isDarkMode ? 'bg-slate-600' : 'bg-gray-200'} after:absolute after:left-[2px] after:top-[2px] after:size-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300`}>
-                <span className="sr-only">{t('options_general_enableVision')}</span>
+                <span className="sr-only">启用视觉功能</span>
               </label>
             </div>
           </div>
 
           <div className="flex items-center justify-between">
             <div>
-              <h3 className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t('options_general_displayHighlights')}
-              </h3>
+              <h3 className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>显示高亮</h3>
               <p className={`text-sm font-normal ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                {t('options_general_displayHighlights_desc')}
+                突出显示代理正在查看的屏幕区域
               </p>
             </div>
             <div className="relative inline-flex cursor-pointer items-center">
@@ -150,22 +145,20 @@ export const GeneralSettings = ({ isDarkMode = false }: GeneralSettingsProps) =>
               <label
                 htmlFor="displayHighlights"
                 className={`peer h-6 w-11 rounded-full ${isDarkMode ? 'bg-slate-600' : 'bg-gray-200'} after:absolute after:left-[2px] after:top-[2px] after:size-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300`}>
-                <span className="sr-only">{t('options_general_displayHighlights')}</span>
+                <span className="sr-only">显示高亮</span>
               </label>
             </div>
           </div>
 
           <div className="flex items-center justify-between">
             <div>
-              <h3 className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t('options_general_planningInterval')}
-              </h3>
+              <h3 className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>规划间隔</h3>
               <p className={`text-sm font-normal ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                {t('options_general_planningInterval_desc')}
+                定义代理重新规划的步骤间隔
               </p>
             </div>
             <label htmlFor="planningInterval" className="sr-only">
-              {t('options_general_planningInterval')}
+              规划间隔
             </label>
             <input
               id="planningInterval"
@@ -181,15 +174,15 @@ export const GeneralSettings = ({ isDarkMode = false }: GeneralSettingsProps) =>
           <div className="flex items-center justify-between">
             <div>
               <h3 className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t('options_general_minWaitPageLoad')}
+                页面加载最小等待时间
               </h3>
               <p className={`text-sm font-normal ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                {t('options_general_minWaitPageLoad_desc')}
+                页面加载后等待的最小毫秒数
               </p>
             </div>
             <div className="flex items-center space-x-2">
               <label htmlFor="minWaitPageLoad" className="sr-only">
-                {t('options_general_minWaitPageLoad')}
+                页面加载最小等待时间
               </label>
               <input
                 id="minWaitPageLoad"
@@ -207,10 +200,10 @@ export const GeneralSettings = ({ isDarkMode = false }: GeneralSettingsProps) =>
           <div className="flex items-center justify-between">
             <div>
               <h3 className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t('options_general_replayHistoricalTasks')}
+                重放历史任务
               </h3>
               <p className={`text-sm font-normal ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                {t('options_general_replayHistoricalTasks_desc')}
+                允许代理使用以前的任务数据来改进其性能
               </p>
             </div>
             <div className="relative inline-flex cursor-pointer items-center">
@@ -224,7 +217,7 @@ export const GeneralSettings = ({ isDarkMode = false }: GeneralSettingsProps) =>
               <label
                 htmlFor="replayHistoricalTasks"
                 className={`peer h-6 w-11 rounded-full ${isDarkMode ? 'bg-slate-600' : 'bg-gray-200'} after:absolute after:left-[2px] after:top-[2px] after:size-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300`}>
-                <span className="sr-only">{t('options_general_replayHistoricalTasks')}</span>
+                <span className="sr-only">重放历史任务</span>
               </label>
             </div>
           </div>

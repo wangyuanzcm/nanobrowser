@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { firewallStore } from '@extension/storage';
 import { Button } from '@extension/ui';
-import { t } from '@extension/i18n';
 
 interface FirewallSettingsProps {
   isDarkMode: boolean;
@@ -57,9 +56,7 @@ export const FirewallSettings = ({ isDarkMode }: FirewallSettingsProps) => {
     <section className="space-y-6">
       <div
         className={`rounded-lg border ${isDarkMode ? 'border-slate-700 bg-slate-800' : 'border-blue-100 bg-gray-50'} p-6 text-left shadow-sm`}>
-        <h2 className={`mb-4 text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-          {t('options_firewall_header')}
-        </h2>
+        <h2 className={`mb-4 text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>防火墙设置</h2>
 
         <div className="space-y-6">
           <div
@@ -68,7 +65,7 @@ export const FirewallSettings = ({ isDarkMode }: FirewallSettingsProps) => {
               <label
                 htmlFor="toggle-firewall"
                 className={`text-base font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                {t('options_firewall_enableToggle')}
+                启用防火墙
               </label>
               <div className="relative inline-block w-12 select-none">
                 <input
@@ -83,7 +80,7 @@ export const FirewallSettings = ({ isDarkMode }: FirewallSettingsProps) => {
                   className={`block h-6 cursor-pointer overflow-hidden rounded-full ${
                     isEnabled ? 'bg-blue-500' : isDarkMode ? 'bg-gray-600' : 'bg-gray-300'
                   }`}>
-                  <span className="sr-only">{t('options_firewall_toggleFirewall_a11y')}</span>
+                  <span className="sr-only">切换防火墙</span>
                   <span
                     className={`block size-6 rounded-full bg-white shadow transition-transform ${
                       isEnabled ? 'translate-x-6' : 'translate-x-0'
@@ -107,7 +104,7 @@ export const FirewallSettings = ({ isDarkMode }: FirewallSettingsProps) => {
                       ? 'bg-slate-700 text-gray-200'
                       : 'bg-gray-200 text-gray-700'
                 }`}>
-                {t('options_firewall_allowList_header')}
+                允许列表
               </Button>
               <Button
                 onClick={() => setActiveList('deny')}
@@ -120,7 +117,7 @@ export const FirewallSettings = ({ isDarkMode }: FirewallSettingsProps) => {
                       ? 'bg-slate-700 text-gray-200'
                       : 'bg-gray-200 text-gray-700'
                 }`}>
-                {t('options_firewall_denyList_header')}
+                拒绝列表
               </Button>
             </div>
           </div>
@@ -136,7 +133,7 @@ export const FirewallSettings = ({ isDarkMode }: FirewallSettingsProps) => {
                   handleAddUrl();
                 }
               }}
-              placeholder={t('options_firewall_placeholders_domainUrl')}
+              placeholder="输入域名 (例如: example.com)"
               className={`flex-1 rounded-md border px-3 py-2 text-sm ${
                 isDarkMode ? 'border-gray-600 bg-slate-700 text-white' : 'border-gray-300 bg-white text-gray-700'
               }`}
@@ -146,7 +143,7 @@ export const FirewallSettings = ({ isDarkMode }: FirewallSettingsProps) => {
               className={`px-4 py-2 text-sm ${
                 isDarkMode ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-green-500 text-white hover:bg-green-600'
               }`}>
-              {t('options_firewall_btnAdd')}
+              添加
             </Button>
           </div>
 
@@ -168,15 +165,13 @@ export const FirewallSettings = ({ isDarkMode }: FirewallSettingsProps) => {
                             ? 'bg-red-600 text-white hover:bg-red-700'
                             : 'bg-red-500 text-white hover:bg-red-600'
                         }`}>
-                        {t('options_firewall_btnRemove')}
+                        移除
                       </Button>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className={`text-center text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  {t('options_firewall_allowList_empty')}
-                </p>
+                <p className={`text-center text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>允许列表为空</p>
               )
             ) : denyList.length > 0 ? (
               <ul className="space-y-2">
@@ -192,15 +187,13 @@ export const FirewallSettings = ({ isDarkMode }: FirewallSettingsProps) => {
                       className={`rounded-l-none px-2 py-1 text-xs ${
                         isDarkMode ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-red-500 text-white hover:bg-red-600'
                       }`}>
-                      Remove
+                      移除
                     </Button>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className={`text-center text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                {t('options_firewall_denyList_empty')}
-              </p>
+              <p className={`text-center text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>拒绝列表为空</p>
             )}
           </div>
         </div>
@@ -208,15 +201,12 @@ export const FirewallSettings = ({ isDarkMode }: FirewallSettingsProps) => {
 
       <div
         className={`rounded-lg border ${isDarkMode ? 'border-slate-700 bg-slate-800' : 'border-blue-100 bg-gray-50'} p-6 text-left shadow-sm`}>
-        <h2 className={`mb-4 text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-          {t('options_firewall_howItWorks_header')}
-        </h2>
+        <h2 className={`mb-4 text-xl font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>工作原理</h2>
         <ul className={`list-disc space-y-2 pl-5 text-left text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-          {t('options_firewall_howItWorks')
-            .split('\n')
-            .map((rule, index) => (
-              <li key={index}>{rule}</li>
-            ))}
+          <li>当防火墙启用时，系统会检查网站域名是否在允许列表或拒绝列表中</li>
+          <li>如果域名在允许列表中，网站将可以正常访问</li>
+          <li>如果域名在拒绝列表中，网站将被阻止访问</li>
+          <li>如果域名不在任何列表中，将根据默认策略决定是否允许访问</li>
         </ul>
       </div>
     </section>

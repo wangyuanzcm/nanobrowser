@@ -22,7 +22,7 @@ declare global {
 }
 
 const SidePanel = () => {
-  const progressMessage = 'Showing progress...';
+  const progressMessage = t('progress_message');
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputEnabled, setInputEnabled] = useState(true);
   const [showStopButton, setShowStopButton] = useState(false);

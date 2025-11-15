@@ -5,18 +5,18 @@ import type { BaseStorage } from '../base/types';
 // Template data
 const defaultFavoritePrompts = [
   {
-    title: '📚 Explore AI Papers',
+    title: '📚 探索AI论文',
     content:
-      '- Go to https://huggingface.co/papers and click through each of the first 3 papers.\n- For each paper:\n  - Record the title, URL and upvotes\n  - Summarise the abstract section\n- Finally, compile together a summary of all 3 papers, ranked by upvotes',
+      '- 访问 https://huggingface.co/papers 并点击前3篇论文\n- 对于每篇论文：\n  - 记录标题、URL和点赞数\n  - 总结摘要部分\n- 最后，将所有3篇论文的总结汇总，并按点赞数排序',
   },
   {
-    title: '🐦 Follow us on X/Twitter!',
-    content: 'Follow us at https://x.com/nanobrowser_ai to stay updated on the latest news and features!',
+    title: '🐦 在X/Twitter上关注我们！',
+    content: '在 https://x.com/nanobrowser_ai 关注我们，获取最新新闻和功能更新！',
   },
   {
-    title: '🌟 Star us on GitHub!',
+    title: '🌟 在GitHub上给我们点星！',
     content:
-      "Open the Nanobrowser repository at https://github.com/nanobrowser/nanobrowser and check if you've already starred it. If not, please support us by giving us a star!",
+      '访问 Nanobrowser 的 GitHub 仓库 https://github.com/nanobrowser/nanobrowser，检查您是否已经给我们点了星标。如果没有，请通过点星标来支持我们！',
   },
 ];
 
