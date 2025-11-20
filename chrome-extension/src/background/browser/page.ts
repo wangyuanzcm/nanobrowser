@@ -1024,6 +1024,437 @@ export default class Page {
     }
   }
 
+  /**
+   * 设置ant-design-vue时间选择器的值
+   * @param index 元素索引
+   * @param date 日期，格式为YYYY-MM-DD
+   * @param time 可选，时间，格式为HH:mm:ss
+   * @returns 操作结果
+   */
+  async setDatePickerValue(index: number, date: string, time?: string): Promise<string> {
+    const selectorMap = this.getSelectorMap();
+    const element = selectorMap?.get(index);
+
+    if (!element || !this._puppeteerPage) {
+      throw new Error('Element not found or puppeteer is not connected');
+    }
+
+    logger.info(`开始模拟人类操作设置日期选择器值: ${date}${time ? ` ${time}` : ''}`);
+    logger.debug(`元素属性: ${JSON.stringify(element.attributes)}`);
+    logger.debug(`元素标签: ${element.tagName}`);
+
+    // 定义备选方法函数
+    const fallbackMethods = async (fullDateValue: string): Promise<string> => {
+      // 方法1：直接设置输入框值
+      try {
+        logger.debug('尝试备选方法1: 直接设置输入框值');
+        const result = await this._puppeteerPage!.evaluate((value: string) => {
+          const inputElements = document.querySelectorAll(
+            'input[class*="calendar"], input[class*="date"], input[class*="picker"], .ant-calendar-input, .ant-picker-input input',
+          );
+          for (const input of inputElements) {
+            if (input instanceof HTMLInputElement) {
+              input.value = value;
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+              input.dispatchEvent(new Event('change', { bubbles: true }));
+              input.dispatchEvent(new Event('blur', { bubbles: true }));
+              return `Success: 通过备选方法1设置日期值为 "${value}"`;
+            }
+          }
+          return `Failed: 备选方法1未找到合适的输入框`;
+        }, fullDateValue);
+        if (!result.startsWith('Failed')) return result;
+      } catch (e) {
+        logger.debug(`备选方法1失败: ${e}`);
+      }
+
+      // 方法2：日历面板直接操作
+      try {
+        logger.debug('尝试备选方法2: 日历面板直接操作');
+        const [year, month, day] = fullDateValue.split(' ')[0].split('-');
+        const result = await this._puppeteerPage!.evaluate(
+          ([y, m, d, t]: string[]) => {
+            const allCalendarPanels = document.querySelectorAll(
+              '.ant-calendar-picker-panel, .ant-picker-dropdown, .el-date-editor__editor-wrapper, .date-picker-popup',
+            );
+            if (allCalendarPanels.length === 0) return `Failed: 未找到日历面板`;
+
+            const panel = allCalendarPanels[0];
+            // 直接设置日期到面板
+            const dateCells = panel.querySelectorAll(`[data-value*="${y}-${m}-${d}"], .day[data-day="${d}"]`);
+            if (dateCells.length > 0) {
+              dateCells[0].click();
+              // 点击确认按钮
+              const confirmBtn = panel.querySelector(
+                '.ant-calendar-ok-btn, .ant-picker-ok button, .el-picker-panel__footer-confirm, button[type="button"]',
+              );
+              if (confirmBtn) confirmBtn.click();
+              return `Success: 通过备选方法2选择日期 ${y}-${m}-${d}${t ? ' ' + t : ''}`;
+            }
+            return `Failed: 备选方法2未找到目标日期`;
+          },
+          [year, month, day, time || ''],
+        );
+        if (!result.startsWith('Failed')) return result;
+      } catch (e) {
+        logger.debug(`备选方法2失败: ${e}`);
+      }
+
+      // 方法3：设置父元素值
+      try {
+        logger.debug('尝试备选方法3: 设置父元素值');
+        const result = await this._puppeteerPage!.evaluate((value: string) => {
+          const parentElements = document.querySelectorAll('.ant-calendar, .ant-picker, .el-date-editor, .date-picker');
+          for (const parent of parentElements) {
+            const input = parent.querySelector('input');
+            if (input instanceof HTMLInputElement) {
+              input.value = value;
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+              input.dispatchEvent(new Event('change', { bubbles: true }));
+              return `Success: 通过备选方法3设置日期值为 "${value}"`;
+            }
+          }
+          return `Failed: 备选方法3未找到合适的父元素`;
+        }, fullDateValue);
+        if (!result.startsWith('Failed')) return result;
+      } catch (e) {
+        logger.debug(`备选方法3失败: ${e}`);
+      }
+
+      // 方法4：模拟键盘输入
+      try {
+        logger.debug('尝试备选方法4: 模拟键盘输入');
+        const result = await this._puppeteerPage!.evaluate((value: string) => {
+          const placeholders = ['日期', 'date', '时间', 'time', '日历', 'calendar'];
+          let inputElement: HTMLInputElement | null = null;
+
+          for (const placeholder of placeholders) {
+            const elements = document.querySelectorAll(`input[placeholder*="${placeholder}"]`);
+            if (elements.length > 0 && elements[0] instanceof HTMLInputElement) {
+              inputElement = elements[0] as HTMLInputElement;
+              break;
+            }
+          }
+
+          if (inputElement) {
+            inputElement.focus();
+            inputElement.select();
+            inputElement.value = value;
+            inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+            inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+            inputElement.dispatchEvent(new Event('blur', { bubbles: true }));
+            return `Success: 通过备选方法4模拟键盘输入设置日期值为 "${value}"`;
+          }
+          return `Failed: 备选方法4未找到合适的输入框`;
+        }, fullDateValue);
+        if (!result.startsWith('Failed')) return result;
+      } catch (e) {
+        logger.debug(`备选方法4失败: ${e}`);
+      }
+
+      return `Error: 所有备选方法均失败，无法设置日期选择器值`;
+    };
+
+    try {
+      // 模拟人类操作的主函数
+      const simulateHumanDatePickerOperation = async (fullDateValue: string): Promise<string> => {
+        // 查找并点击日期选择器元素以打开下拉面板
+        logger.debug('开始模拟人类操作流程');
+
+        // 步骤1: 点击元素打开日期选择器面板
+        const elementHandle = await this.locateElement(element);
+        if (!elementHandle) {
+          throw new Error(`无法找到日期选择器元素`);
+        }
+
+        logger.debug('点击日期选择器元素以打开面板');
+        await elementHandle.click();
+        // 模拟人类操作延迟 - 等待面板显示
+        await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 300));
+
+        // 步骤2: 执行复杂的DOM操作来模拟人类选择日期时间
+        const result = await this._puppeteerPage!.evaluate(async (fullDateValue: string) => {
+          const parts = fullDateValue.split(' ');
+          const d = parts[0];
+          const fn = (window as unknown as { pickAntDateAdvanced?: (d: string) => unknown }).pickAntDateAdvanced;
+          if (typeof fn === 'function') {
+            try {
+              const ok = fn(d);
+              if (ok) {
+                const confirmBtn = document.querySelector(
+                  '.ant-calendar-ok-btn, .ant-picker-ok button, .el-picker-panel__footer-confirm, button[type="button"]',
+                );
+                if (confirmBtn && confirmBtn instanceof HTMLElement) {
+                  await new Promise(resolve => setTimeout(resolve, 150));
+                  confirmBtn.click();
+                }
+                return `Success: 通过埋点函数选择日期 "${fullDateValue}"`;
+              }
+            } catch (_e) {
+              void 0;
+            }
+          }
+          // 等待面板加载完成
+          const waitForPanel = async (): Promise<HTMLElement | null> => {
+            for (let i = 0; i < 5; i++) {
+              const panelSelectors = [
+                '.ant-calendar-picker-panel',
+                '.ant-picker-dropdown',
+                '.el-date-editor__editor-wrapper',
+                '.date-picker-popup',
+                '.flatpickr-calendar',
+                '.MuiPickersPopper-root',
+              ];
+
+              for (const selector of panelSelectors) {
+                const panel = document.querySelector(selector) as HTMLElement;
+                if (panel && window.getComputedStyle(panel).display !== 'none') {
+                  return panel;
+                }
+              }
+              await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            return null;
+          };
+
+          const calendarPanel = await waitForPanel();
+          if (!calendarPanel) {
+            return `Error: 未找到日期选择器面板`;
+          }
+
+          const yearMonthDay = fullDateValue.split(' ')[0].split('-');
+          if (yearMonthDay.length !== 3) {
+            return `Error: 日期格式不正确，应为YYYY-MM-DD`;
+          }
+
+          const [targetYear, targetMonth, targetDay] = yearMonthDay;
+
+          // 查找年份选择器并点击
+          const clickElement = (selector: string): boolean => {
+            const element = calendarPanel.querySelector(selector);
+            if (element && element instanceof HTMLElement) {
+              element.click();
+              return true;
+            }
+            return false;
+          };
+
+          // 选择年份
+          let yearSelected = false;
+          const yearSelectors = [
+            '.ant-calendar-year-select',
+            '.ant-picker-year-btn',
+            '.year-selector',
+            '.MuiYearCalendar-root button',
+            '.flatpickr-monthDropdown-month',
+          ];
+
+          for (const selector of yearSelectors) {
+            if (clickElement(selector)) {
+              await new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 200));
+
+              // 查找并点击目标年份
+              const yearOptions = document.querySelectorAll(
+                `.ant-calendar-year-panel li[data-value="${targetYear}"], 
+                   .year-selector-option[data-value="${targetYear}"],
+                   [data-year="${targetYear}"]`,
+              );
+
+              if (yearOptions.length > 0) {
+                yearOptions[0].click();
+                yearSelected = true;
+                await new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 200));
+                break;
+              }
+            }
+          }
+
+          // 选择月份
+          let monthSelected = false;
+          const monthIndex = parseInt(targetMonth) - 1;
+          const monthSelectors = [
+            '.ant-calendar-month-select',
+            '.ant-picker-month-btn',
+            '.month-selector',
+            '.MuiMonthCalendar-root button',
+            '.flatpickr-monthDropdown-year',
+          ];
+
+          for (const selector of monthSelectors) {
+            if (clickElement(selector)) {
+              await new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 200));
+
+              // 查找并点击目标月份
+              const monthOptions = document.querySelectorAll(
+                `.ant-calendar-month-panel li[data-value="${monthIndex}"], 
+                   .month-selector-option[data-value="${monthIndex}"],
+                   [data-month="${monthIndex}"]`,
+              );
+
+              if (monthOptions.length > 0) {
+                monthOptions[0].click();
+                monthSelected = true;
+                await new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 200));
+                break;
+              }
+            }
+          }
+
+          // 选择日期
+          let dateSelected = false;
+          const daySelectors = [
+            `.ant-calendar-date-panel-cell[data-value="${targetYear}-${targetMonth}-${targetDay}"]`,
+            `.day[data-day="${targetDay}"]`,
+            `[data-date="${targetYear}-${targetMonth}-${targetDay}"]`,
+            `.flatpickr-day[aria-label*="${targetDay}"]`,
+          ];
+
+          for (const selector of daySelectors) {
+            const dayElement = document.querySelector(selector);
+            if (dayElement && dayElement instanceof HTMLElement) {
+              // 先移动到元素位置，模拟人类鼠标移动
+              dayElement.focus();
+              // 稍微延迟后点击
+              await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 200));
+              dayElement.click();
+              dateSelected = true;
+              break;
+            }
+          }
+
+          // 如果未找到精确的日期选择器，尝试查找所有可点击的日期单元格
+          if (!dateSelected) {
+            const dayCells = calendarPanel.querySelectorAll('.ant-calendar-date, .day, .flatpickr-day, [data-day]');
+            for (const cell of dayCells) {
+              if (cell.textContent?.trim() === targetDay) {
+                await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 200));
+                cell.click();
+                dateSelected = true;
+                break;
+              }
+            }
+          }
+
+          // 如果有时间，设置时间
+          const timePart = fullDateValue.split(' ')[1];
+          if (timePart) {
+            const [hours, minutes] = timePart.split(':');
+
+            // 查找时间选择器
+            const timeSelectors = [
+              '.ant-calendar-time-picker',
+              '.time-picker',
+              '.el-time-spinner__wrapper',
+              '.MuiTimePicker-root',
+            ];
+
+            for (const selector of timeSelectors) {
+              const timePicker = document.querySelector(selector);
+              if (timePicker) {
+                // 设置小时
+                const hourOptions = timePicker.querySelectorAll(
+                  `.ant-calendar-time-panel-column li[data-value="${hours}"],
+                     .time-spinner-item[data-value="${hours}"],
+                     [data-hour="${hours}"]`,
+                );
+                if (hourOptions.length > 0) {
+                  await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 100));
+                  hourOptions[0].click();
+                }
+
+                // 设置分钟
+                const minuteOptions = timePicker.querySelectorAll(
+                  `.ant-calendar-time-panel-column li[data-value="${minutes}"],
+                     .time-spinner-item[data-value="${minutes}"],
+                     [data-minute="${minutes}"]`,
+                );
+                if (minuteOptions.length > 0) {
+                  await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 100));
+                  minuteOptions[0].click();
+                }
+                break;
+              }
+            }
+          }
+
+          // 步骤3: 点击确认按钮或点击空白区域完成选择
+          let confirmationResult = '';
+
+          // 尝试点击确认按钮
+          const confirmButtonSelectors = [
+            '.ant-calendar-ok-btn',
+            '.ant-picker-ok button',
+            '.el-picker-panel__footer-confirm',
+            '.confirm-button',
+            'button[type="button"]:not([type="reset"]):not([type="submit"])',
+          ];
+
+          for (const selector of confirmButtonSelectors) {
+            const confirmButton = document.querySelector(selector);
+            if (confirmButton && confirmButton instanceof HTMLElement) {
+              await new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 200));
+              confirmButton.click();
+              confirmationResult = '通过确认按钮';
+              break;
+            }
+          }
+
+          // 如果没有找到确认按钮，尝试点击文档空白区域
+          if (!confirmationResult) {
+            const docBody = document.body;
+            if (docBody) {
+              const clickEvent = new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+                clientX: 10,
+                clientY: 10,
+              });
+              docBody.dispatchEvent(clickEvent);
+              confirmationResult = '通过点击空白区域';
+            }
+          }
+
+          // 验证是否成功选择了日期
+          if (dateSelected) {
+            return `Success: 成功通过模拟人类操作选择日期 "${fullDateValue}" ${confirmationResult}`;
+          } else {
+            return `Error: 日期选择失败，未找到目标日期 ${targetYear}-${targetMonth}-${targetDay}`;
+          }
+        }, fullDateValue);
+
+        return result;
+      };
+
+      // 执行主流程
+      const fullDateValue = time ? `${date} ${time}` : date;
+      let result = await simulateHumanDatePickerOperation(fullDateValue);
+
+      // 如果主流程失败，尝试备选方法
+      if (result.startsWith('Error')) {
+        logger.warn(`模拟人类操作失败: ${result}，尝试备选方法`);
+        result = await fallbackMethods(fullDateValue);
+      }
+
+      logger.info(`日期选择器操作结果: ${result}`);
+      return result;
+    } catch (error) {
+      const errorMessage = `设置日期选择器值时出错: ${error instanceof Error ? error.message : String(error)}`;
+      logger.error(errorMessage);
+
+      // 即使捕获到异常，也尝试备选方法
+      try {
+        logger.debug('尝试通过备选方法恢复操作');
+        const fullDateValue = time ? `${date} ${time}` : date;
+        const fallbackResult = await fallbackMethods(fullDateValue);
+        logger.info(`备选方法结果: ${fallbackResult}`);
+        return fallbackResult;
+      } catch (fallbackError) {
+        throw new Error(errorMessage);
+      }
+    }
+  }
+
   async locateElement(element: DOMElementNode): Promise<ElementHandle | null> {
     if (!this._puppeteerPage) {
       // throw new Error('Puppeteer page is not connected');
@@ -1353,6 +1784,26 @@ export default class Page {
   getDomElementByIndex(index: number): DOMElementNode | null {
     const selectorMap = this.getSelectorMap();
     return selectorMap.get(index) || null;
+  }
+
+  getDomElementIndexByAttribute(attribute: string, value: string): number | null {
+    const selectorMap = this.getSelectorMap();
+    if (!selectorMap) return null;
+    for (const [idx, node] of selectorMap.entries()) {
+      const attrVal = node.attributes[attribute];
+      if (attrVal !== undefined && String(attrVal) === String(value)) {
+        return idx;
+      }
+    }
+    return null;
+  }
+
+  async setDatePickerValueByNbId(nbId: string, date: string, time?: string): Promise<string> {
+    const index = this.getDomElementIndexByAttribute('data-nb-id', nbId);
+    if (index === null) {
+      throw new Error(`Element with data-nb-id=${nbId} not found`);
+    }
+    return this.setDatePickerValue(index, date, time);
   }
 
   isFileUploader(elementNode: DOMElementNode, maxDepth = 3, currentDepth = 0): boolean {

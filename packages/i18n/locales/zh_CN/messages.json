@@ -141,5 +141,44 @@
   },
   "favorite_prompt_star_on_github": {
     "message": "🌟 在GitHub上给我们点星！"
+  },
+  "act_setDatePickerValue_start": {
+    "message": "正在设置索引为 $INDEX$ 的日期选择器值为 $DATE$",
+    "placeholders": {
+      "index": {
+        "content": "$1",
+        "example": "0"
+      },
+      "date": {
+        "content": "$2",
+        "example": "2023-12-25"
+      }
+    }
+  },
+  "act_setDatePickerValue_ok": {
+    "message": "成功设置日期选择器值为 $DATE$ $TIME$（索引：$INDEX$）",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "2023-12-25"
+      },
+      "time": {
+        "content": "$2",
+        "example": "14:30:00"
+      },
+      "index": {
+        "content": "$3",
+        "example": "0"
+      }
+    }
+  },
+  "act_setDatePickerValue_failed": {
+    "message": "设置日期选择器值失败：$ERROR$",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "元素未找到"
+      }
+    }
   }
 }

@@ -967,5 +967,44 @@
         "example": "Option not found"
       }
     }
+  },
+  "act_setDatePickerValue_start": {
+    "message": "Setting date picker value at index $INDEX$ to $DATE$",
+    "placeholders": {
+      "index": {
+        "content": "$1",
+        "example": "0"
+      },
+      "date": {
+        "content": "$2",
+        "example": "2023-12-25"
+      }
+    }
+  },
+  "act_setDatePickerValue_ok": {
+    "message": "Successfully set date picker value to $DATE$ $TIME$ at index $INDEX$",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "2023-12-25"
+      },
+      "time": {
+        "content": "$2",
+        "example": "14:30:00"
+      },
+      "index": {
+        "content": "$3",
+        "example": "0"
+      }
+    }
+  },
+  "act_setDatePickerValue_failed": {
+    "message": "Failed to set date picker value: $ERROR$",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Element not found"
+      }
+    }
   }
 }

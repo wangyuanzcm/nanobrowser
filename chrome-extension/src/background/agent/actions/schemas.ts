@@ -205,6 +205,17 @@ export const selectDropdownOptionActionSchema: ActionSchema = {
   }),
 };
 
+export const setDatePickerValueActionSchema: ActionSchema = {
+  name: 'set_date_picker_value',
+  description: 'Set value for ant-design-vue date picker component',
+  schema: z.object({
+    intent: z.string().default('').describe('purpose of this action'),
+    index: z.number().int().describe('index of the date picker element'),
+    date: z.string().describe('date to set in YYYY-MM-DD format'),
+    time: z.string().optional().describe('optional time to set in HH:mm:ss format'),
+  }),
+};
+
 export const waitActionSchema: ActionSchema = {
   name: 'wait',
   description: 'Wait for x seconds default 3, do NOT use this action unless user asks to wait explicitly',

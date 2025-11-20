@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AntDV Demo with Instrumentation</title>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <!-- 示例交互映射（可选） -->
+    <script id="nanobrowser-map" type="application/json">
+      {
+        "elements": {
+          "birth_date_native": {
+            "selector": "#birthDateNative",
+            "action": "set_date_picker_value",
+            "format": "YYYY-MM-DD",
+            "confirm": true,
+            "panelSelectors": [
+              ".ant-picker-dropdown",
+              ".el-date-editor__editor-wrapper",
+              ".date-picker-popup"
+            ]
+          },
+          "city_select_native": {
+            "selector": "#citySelectNative",
+            "action": "select_dropdown_option",
+            "optionsSource": "innerText"
+          },
+          "search_input_native": {
+            "selector": "#searchInputNative",
+            "action": "input_text"
+          },
+          "submit_button_native": {
+            "selector": "#submitButtonNative",
+            "action": "click"
+          }
+        }
+      }
+    </script>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
